@@ -135,27 +135,27 @@ sealed class Outcome<out V : Any, out E : Any> {
 inline fun <V : Any, U : Any, E : Any> Outcome<V, E>.map(transform: (V) -> U): Outcome<U, E> {
     return when (this) {
         is Outcome.Success -> Outcome.Success(transform(value))
-        is Outcome.Failure -> Outcome.Failure(cause)
+        is Outcome.Failure -> this
     }
 }
 
 inline fun <V : Any, U : Any, E : Any> Outcome<V, E>.flatMap(transform: (V) -> Outcome<U, E>): Outcome<U, E> {
     return when (this) {
         is Outcome.Success -> transform(value)
-        is Outcome.Failure -> Outcome.Failure(cause)
+        is Outcome.Failure -> this
     }
 }
 
 inline fun <V : Any, U : Any, E : Any> Outcome<V, E>.mapError(transform: (E) -> U): Outcome<V, U> {
     return when (this) {
-        is Outcome.Success -> Outcome.Success(value)
+        is Outcome.Success -> this
         is Outcome.Failure -> Outcome.Failure(transform(cause))
     }
 }
 
 inline fun <V : Any, U : Any, E : Any> Outcome<V, E>.flatMapError(transform: (E) -> Outcome<V, U>): Outcome<V, U> {
     return when (this) {
-        is Outcome.Success -> Outcome.Success(value)
+        is Outcome.Success -> this
         is Outcome.Failure -> transform(cause)
     }
 }
